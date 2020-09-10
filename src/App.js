@@ -19,7 +19,7 @@ function App() {
   const [noCount, setNoCount] = React.useState(0);
   const [total, setTotal] = React.useState(0)
   const [chosenEmoji, setChosenEmoji] = React.useState({ emoji: "" });
-  // const [emj, setEmj] = React.useState([]);
+  const [chatInput, setChatInput] = React.useState("")
 
   const messagesRef = React.useRef(messages)  //dub nghia la them value moi, vo array cu voi dk khong rerender(cho khac voi usestate)
 
@@ -113,7 +113,8 @@ function App() {
 
   const onEmojiClick = (event, emojiObject) => {
     console.log("check emoji", emojiObject)
-    setChosenEmoji(emojiObject);
+    setChatInput(chatInput + " " + emojiObject.emoji);
+
   }
   // const setEmj = (chosenEmoji) => {
   //   return chosenEmoji
@@ -195,8 +196,13 @@ function App() {
             name="chat"
             label="talk to your friends"
             className="tien-input"
-            value={chosenEmoji.emoji}
+            value={chatInput}
+            onChange={(e) => { console.log(e); setChatInput(e.target.value) }}
           />
+
+
+          <span >{chosenEmoji && <EmojiData chosenEmoji={chosenEmoji} />}</span>
+
 
           <Picker
             onEmojiClick={onEmojiClick}
