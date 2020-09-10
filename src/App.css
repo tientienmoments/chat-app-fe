@@ -1,0 +1,209 @@
+
+.bold{
+  font-weight: 1000 !important;
+  letter-spacing: 2px;
+  font-size: 20px;
+}
+.float-right{
+float: right;
+}
+.userOne{
+  color: red !important;
+  float: right;
+  letter-spacing: 2px;
+  font-weight: 700 !important;
+  margin-left: 5px;
+}
+.userTwo{
+  color: black !important;
+  letter-spacing: 2px;
+  font-weight: 700 !important;
+}
+
+.userOne:before
+{
+    content: ": ";
+    color: grey;
+}
+
+.userTwo:after
+{
+    content: ": ";
+    color: grey;
+}
+
+.progress{
+  width: 60vw;
+  margin-bottom: 10px;
+}
+.container{
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: 0;
+  margin-left: 0;
+}
+.btn{
+  width: 200px;
+  height: 30px;
+  padding: 0px;
+
+}
+.tien-welcome{
+width: 50px;
+border-radius: 50px;
+height: 50px;
+}
+/* style={{ fontStyle: "italic", fontSize: "10px", marginTop: "10px !important" }} */
+/* p{
+  margin:0;
+} */
+.arrange-time{
+  font-size:10px;
+  font-style: italic;
+  margin-top: 20px! important;
+  color: rgba(128, 128, 128, 0.632);
+  margin-left:5px;
+  margin-right:5px;
+}
+
+.tien-poll{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  
+  align-items: center;
+  
+}
+.tien-poll-part{
+  
+  width: 60vw;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+.tien-poll-part-bot{
+  
+  width: 60vw;
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+}
+.tien-chat-part{
+  display: flex;
+  flex-direction: row;
+ 
+  align-items: center;
+  justify-content: space-between;
+}
+.tien-input{
+  
+  width: 40vw !important;
+  text-align: center;
+  font-style: italic !important;
+
+}
+.md-form label{
+  margin-left: 30px;
+}
+
+.mainPage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+}
+.tien-commu{
+  margin-top: 20px;
+  padding-bottom: 100px;
+  height: 500px;
+  overflow: scroll;
+  display: flex;
+  flex-direction: column-reverse;
+  border-radius: 23px;
+background: #ffffff;
+box-shadow: inset 11px 11px 40px #c2c2c2, 
+            inset -11px -11px 40px #ffffff;
+}
+.row{
+  margin:0;
+  margin-left: 40px;
+  margin-right: 40px;
+  
+}
+.move-right{
+  display: flex;
+  justify-content: flex-end;
+}
+.tien-display{
+  display:inline;
+}
+.tien-display-none{
+  display:none;
+}
+
+p{
+  margin-top: 10px;
+  margin-bottom: 0px !important;
+}
+.white-text {
+  color: #fff !important;
+  font-weight: 700 !important;
+  text-align: center !important;
+}
+
+.tien-group-chat{
+  
+  width: 150px !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+
+.tien-chat-room{
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+
+}
+.emoji-picker-react {
+ 
+  height: 70px !important;
+  border-radius: 30px !important;
+  background: #ffffff !important;
+  box-shadow: inset 5px 5px 40px #c2c2c2, 
+            inset -5px -5px 40px #ffffff !important;
+  
+}
+.emoji-picker-react .emoji-group:before {
+  content: attr(data-display-name);
+  color: #aaa;
+  font-size: 10px;
+  position: sticky;
+  background: none !important;
+  width: 100%;
+  z-index: 1;
+  top: 0;
+  text-align: center;
+  text-transform: uppercase;
+  line-height: 20px;
+  font-weight: 700;
+}
+.emoji-picker-react .emoji-categories {
+  display: none !important;
+}
+.emoji-picker-react .emoji-group:before {
+  content: attr(data-display-name);
+  color: #aaa;
+  font-size: 10px;
+  position: sticky;
+  background: rgba(255, 255, 255, 0.95);
+  width: 100%;
+  z-index: 1;
+  top: 0;
+  text-transform: uppercase;
+  line-height: 20px;
+  font-weight: 700;
+}
