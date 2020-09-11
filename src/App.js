@@ -26,13 +26,9 @@ function App() {
 
   React.useEffect(() => {
     socket.on("connection")
-    console.log("join 1")
+    
     return () => {
-      console.log("pre dis")
-
       socket.disconnect();
-      console.log("discted")
-
     };
 
   }, []);
@@ -44,6 +40,7 @@ function App() {
     socket.on("rooms", function (data) {
       // data= rooms from backend
       if (data && Array.isArray(data)) {
+  
         setRooms(data)
       }
     })
@@ -130,8 +127,8 @@ function App() {
 
     return messages.map(e => <Message key={e.id} obj={e} user={user} />)
   }
-  console.log("check msg", messages)
-  console.log("eji value in app", chosenEmoji)
+  // console.log("check msg", messages)
+  
   return (
     <div className="mainPage">
       <div className="tien-chat-room">
@@ -197,7 +194,7 @@ function App() {
             label="talk to your friends"
             className="tien-input"
             value={chatInput}
-            onChange={(e) => { console.log(e); setChatInput(e.target.value) }}
+            onChange={(e) => { console.log(e); setChatInput(e.target.value) }}  //muc dich nhan gia tri nhap 
           />
 
 
@@ -220,7 +217,7 @@ function App() {
 }
 const Rooms = props => props.rooms.map((e, idx) => {
   // console.log("check e:", e)
-  // console.log("tien check ", props)
+  console.log("tien check member", props)
 
   return <MDBBtn
     light
@@ -245,17 +242,13 @@ const Rooms = props => props.rooms.map((e, idx) => {
             alert("something wrong")
           }
         })
-    }}> {e.room} {idx === props.rooms.length - 1 ? "" : ""} - {} </MDBBtn> //props.currentRoom.members.length
+    }}> {e.room} {idx === props.rooms.length - 1 ? "" : ""} - {props.rooms[idx].members.length} </MDBBtn> //props.rooms[0].members.length
 })
 
 
 // const Message = props.messages.map = ({ obj, user }, idx) => {
 
-const Message = ({ obj, user, chosenEmoji }) => {
-  // console.log("check user ", user)
-  // console.log("check obj", obj)
-  console.log("eji in com mess", chosenEmoji)
-
+const Message = ({ obj, user}) => {
   return <MDBRow className={obj.user.name === user.name ? "move-right" : ""} >
     <span
       className={obj.user.name === user.name ? "tien-display" : "tien-display-none"}
@@ -279,7 +272,7 @@ const Message = ({ obj, user, chosenEmoji }) => {
 }
 
 const EmojiData = ({ chosenEmoji }) => {
-  console.log("eji in com ejidata:", chosenEmoji.emoji)
+  
   return <div>
     {chosenEmoji.emoji}
   </div>
