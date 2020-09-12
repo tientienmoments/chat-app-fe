@@ -5,8 +5,17 @@ import socket from "./socket"
 import Picker from 'emoji-picker-react';
 
 import './App.css';
-import { MDBProgress, MDBBtn, MDBContainer, MDBInput, MDBRow, MDBAlert } from 'mdbreact';
+import {
+  MDBProgress, MDBBtn, MDBContainer, MDBInput, MDBRow,
+
+} from 'mdbreact';
+import Popup from 'reactjs-popup';
+import 'reactjs-popup/dist/index.css';
+
+
+
 import moment from 'moment';
+import axios from "axios";
 
 
 function App() {
@@ -21,12 +30,14 @@ function App() {
   const [chosenEmoji, setChosenEmoji] = React.useState({ emoji: "" });
   const [chatInput, setChatInput] = React.useState("")
 
+
+
   const messagesRef = React.useRef(messages)  //dub nghia la them value moi, vo array cu voi dk khong rerender(cho khac voi usestate)
 
 
   React.useEffect(() => {
     socket.on("connection")
-    
+
     return () => {
       socket.disconnect();
     };
@@ -40,7 +51,7 @@ function App() {
     socket.on("rooms", function (data) {
       // data= rooms from backend
       if (data && Array.isArray(data)) {
-  
+
         setRooms(data)
       }
     })
@@ -96,12 +107,37 @@ function App() {
   }, [total, yesCount, maybeCount, noCount]);
 
 
-  const handleChatSubmit = (e) => {
+  const handleChatSubmit = async (e) => {
     e.preventDefault();
     const message = e.target.chat.value
-    socket.emit("sendMessage", message)
-    const form = document.getElementById("chatform");
-    form.reset();
+    console.log("t msg", message)
+    const file = e.target.upload.files[0];
+    console.log("file", file)
+    if (file) {
+      const form = new FormData();
+      form.append("file", file)
+      form.append("upload_preset", process.env.REACT_APP_CLOUDINARY_PRESET);
+      const res = await axios.post(
+        "https://api.cloudinary.com/v1_1/dysll4gsj/image/upload",
+        form
+      );
+      console.log("data", res.data)
+      if (res.status.toString().startsWith("2")) {
+        socket.emit("sendMessage", {
+          type: "image",
+          chat: res.data.secure_url
+        })
+      }
+    }
+    else if (message) {
+      socket.emit("sendMessage", {
+        type: "string",
+        chat: message
+      })
+
+    }
+    // const form = document.getElementById("chatform");
+    // form.reset();
   }
 
   const sendVote = (option) => {
@@ -113,9 +149,7 @@ function App() {
     setChatInput(chatInput + " " + emojiObject.emoji);
 
   }
-  // const setEmj = (chosenEmoji) => {
-  //   return chosenEmoji
-  // }
+
 
   const renderMessages = (m) => {
     const messages = m.slice();
@@ -128,7 +162,7 @@ function App() {
     return messages.map(e => <Message key={e.id} obj={e} user={user} />)
   }
   // console.log("check msg", messages)
-  
+  console.log("check room onl", rooms)
   return (
     <div className="mainPage">
       <div className="tien-chat-room">
@@ -138,6 +172,7 @@ function App() {
           setCurrentRoom={setCurrentRoom}
           setMessages={setMessages}
           messagesRef={messagesRef} />
+
       </div>
 
       <MDBContainer>
@@ -197,15 +232,50 @@ function App() {
             onChange={(e) => { console.log(e); setChatInput(e.target.value) }}  //muc dich nhan gia tri nhap 
           />
 
+          <label style={{ paddingTop: "30px" }}>
+            <i class="fas fa-paperclip" aria-hidden="true"></i>
 
-          <span >{chosenEmoji && <EmojiData chosenEmoji={chosenEmoji} />}</span>
+            <MDBInput
+              type="file"
+              name="upload"
+              aria-disabled="false"
+              style={{ display: "none" }}
+            />
+          </label>
 
-
-          <Picker
+          {/* <MDBInput
+            type="file"
+            name="upload"
+            aria-disabled="true"
+          /> */}
+          {/* <label className="btn btn-default btn-sm center-block btn-file">
+            <i class="fa fa-upload fa-2x" aria-hidden="true"></i>
+            <input type="file" name="upload" style={{ display: "none" }} />
+          </label> */}
+          {/* <Picker
             onEmojiClick={onEmojiClick}
-            disableSearchBar={true}
-            preload={false}
-          />
+
+          /> */}
+          <Popup trigger={<i class="far fa-smile text-muted"  ></i>} position="top center">
+
+            <Picker
+              onEmojiClick={onEmojiClick}
+              groupNames={{
+                smileys_people: 'yellow faces',
+                animals_nature: 'cute dogs and also trees',
+                food_drink: 'milkshakes and more',
+                travel_places: 'I love trains',
+                activities: 'lets play a game',
+                objects: 'stuff',
+                symbols: 'more stuff',
+                flags: 'fun with flags',
+                recently_used: 'did I really use those?!',
+              }}
+            />
+
+          </Popup>
+
+          {/* <i class="fas fa-paperclip"></i> */}
 
           <MDBBtn style={{ borderRadius: "30px", padding: "0px", marginTop: "20px" }} type="submit" color="teal darken-3">Send</MDBBtn>
         </form>
@@ -219,7 +289,7 @@ const Rooms = props => props.rooms.map((e, idx) => {
   // console.log("check e:", e)
   console.log("tien check member", props)
 
-  return <MDBBtn
+  return <div><MDBBtn
     light
     color={!props.currentRoom ? "teal lighten-4" : (e._id === props.currentRoom._id ? "teal darken-3" : "")}
     className="text-center"
@@ -242,37 +312,78 @@ const Rooms = props => props.rooms.map((e, idx) => {
             alert("something wrong")
           }
         })
-    }}> {e.room} {idx === props.rooms.length - 1 ? "" : ""} - {props.rooms[idx].members.length} </MDBBtn> //props.rooms[0].members.length
+    }}> {e.room} {idx === props.rooms.length - 1 ? "" : ""} - {props.rooms[idx].members.length} </MDBBtn>
+    {/* <p>{props.rooms[idx].members.name}</p> */}
+  </div>//props.rooms[0].members.length
 })
 
 
 // const Message = props.messages.map = ({ obj, user }, idx) => {
 
-const Message = ({ obj, user}) => {
-  return <MDBRow className={obj.user.name === user.name ? "move-right" : ""} >
-    <span
-      className={obj.user.name === user.name ? "tien-display" : "tien-display-none"}
-    >{obj.showTime ? <p className="arrange-time" ><span> {moment(obj.createdAt).format("hh : mm ")} </span></p> : null}</span>
-    <p>
+const Message = ({ obj, user }) => {
+  if (obj.type === 'image') {
+    // <img className="tien-image" src={`${obj.chat}`} alt="img" />
+    return <MDBRow className={obj.user.name === user.name ? "move-right" : ""} >
       <span
-        className={obj.user.name === user.name ? "userOne" : "userTwo"}
-        style={{ fontWeight: "bold" }}
-      > {obj.user.name}</span>
-      <span >{obj.chat}</span>
+        className={obj.user.name === user.name ? "tien-display" : "tien-display-none"}
+      >{obj.showTime ? <p className="arrange-time" ><span> {moment(obj.createdAt).format("hh : mm ")} </span></p> : null}</span>
+
+      <span>
+        <span
+          className={obj.user.name === user.name ? "userOne" : "userTwo"}
+          style={{ fontWeight: "bold" }}
+        > {obj.user.name}</span>
+        <img className="tien-image" src={`${obj.chat}`} alt="img" />
+      </span>
 
 
 
+      <span
+        className={obj.user.name === user.name ? "tien-display-none" : "tien-display"}
+      >{obj.showTime ? <p className="arrange-time"><span > {moment(obj.createdAt).format("hh : mm ")} </span></p> : null}</span>
+    </MDBRow>
+  } else if (obj.type === 'string') {
+    return <MDBRow className={obj.user.name === user.name ? "move-right" : ""} >
+      <span
+        className={obj.user.name === user.name ? "tien-display" : "tien-display-none"}
+      >{obj.showTime ? <p className="arrange-time" ><span> {moment(obj.createdAt).format("hh : mm ")} </span></p> : null}</span>
 
-    </p>
-    <span
-      className={obj.user.name === user.name ? "tien-display-none" : "tien-display"}
-    >{obj.showTime ? <p className="arrange-time"><span > {moment(obj.createdAt).format("hh : mm ")} </span></p> : null}</span>
-  </MDBRow>
+      <p>
+        <span
+          className={obj.user.name === user.name ? "userOne" : "userTwo"}
+          style={{ fontWeight: "bold" }}
+        > {obj.user.name}</span>
+        <span >{obj.chat}</span>
+
+      </p>
+      <span
+        className={obj.user.name === user.name ? "tien-display-none" : "tien-display"}
+      >{obj.showTime ? <p className="arrange-time"><span > {moment(obj.createdAt).format("hh : mm ")} </span></p> : null}</span>
+    </MDBRow>
+
+
+  } else {
+    return <MDBRow className={obj.user.name === user.name ? "move-right" : ""} >
+      <span
+        className={obj.user.name === user.name ? "tien-display" : "tien-display-none"}
+      >{obj.showTime ? <p className="arrange-time" ><span> {moment(obj.createdAt).format("hh : mm ")} </span></p> : null}</span>
+      <p>
+        <span
+          className={obj.user.name === user.name ? "userOne" : "userTwo"}
+          style={{ fontWeight: "bold" }}
+        > {obj.user.name}</span>
+        <span >{obj.chat}</span>
+      </p>
+      <span
+        className={obj.user.name === user.name ? "tien-display-none" : "tien-display"}
+      >{obj.showTime ? <p className="arrange-time"><span > {moment(obj.createdAt).format("hh : mm ")} </span></p> : null}</span>
+    </MDBRow>
+  }
 
 }
 
 const EmojiData = ({ chosenEmoji }) => {
-  
+
   return <div>
     {chosenEmoji.emoji}
   </div>

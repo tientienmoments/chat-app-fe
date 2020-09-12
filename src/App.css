@@ -50,9 +50,10 @@ float: right;
 
 }
 .tien-welcome{
-width: 50px;
-border-radius: 50px;
-height: 50px;
+width: 50px !important;
+border-radius: 50px !important;
+height: 50px !important;
+font-size: 15px !important;
 }
 /* style={{ fontStyle: "italic", fontSize: "10px", marginTop: "10px !important" }} */
 /* p{
@@ -98,7 +99,7 @@ height: 50px;
 }
 .tien-input{
   
-  width: 40vw !important;
+  width: 55vw !important;
   text-align: center;
   font-style: italic !important;
 
@@ -116,7 +117,8 @@ height: 50px;
 .tien-commu{
   margin-top: 20px;
   padding-bottom: 100px;
-  height: 500px;
+  width:80vw;
+  height: 60vh;
   overflow: scroll;
   display: flex;
   flex-direction: column-reverse;
@@ -168,7 +170,7 @@ p{
   flex-direction: column;
 
 }
-.emoji-picker-react {
+/* .emoji-picker-react {
  
   height: 70px !important;
   border-radius: 30px !important;
@@ -176,8 +178,8 @@ p{
   box-shadow: inset 5px 5px 40px #c2c2c2, 
             inset -5px -5px 40px #ffffff !important;
   
-}
-.emoji-picker-react .emoji-group:before {
+} */
+/* .emoji-picker-react .emoji-group:before {
   content: attr(data-display-name);
   color: #aaa;
   font-size: 10px;
@@ -206,4 +208,31 @@ p{
   text-transform: uppercase;
   line-height: 20px;
   font-weight: 700;
+} */
+.tien-image{
+  width:20vw;
+  margin-bottom: 10px;
+  
+}
+.fa-smile:before {
+font-size: 30px;
+color: #757575;
+
+}
+
+.fa-paperclip:before {
+  font-size: 25px;
+  color: #757575;
+}
+
+.custom-file-input{
+  text-align: center;
+}
+.custom-file:before{
+  content:"click here";
+  margin-left: 10px;
+}
+img {
+  vertical-align: top !important;
+  border-style: none;
 }
